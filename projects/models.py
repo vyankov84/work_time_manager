@@ -60,6 +60,14 @@ class Project(models.Model):
         blank=True,
     )
 
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
     def clean(self):
         super().clean()
         validate_job_number_region(self.job_number, self.region)
