@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold"><i class="bi bi-info-circle me-2"></i>Project Details</h2>
+            <div>
+                <a href="{% url 'projects:project-update' project.pk %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <a href="{% url 'projects:project-list' %}" class="btn btn-outline-secondary btn-sm ms-2">
+                    Back to List
+                </a>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-primary">{{ project.job_number }} - {{ project.name }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Client Name:</div>
+                    <div class="col-sm-8 fw-semibold">{{ project.client_name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Region:</div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-secondary">{{ project.get_region_display }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Status:</div>
+                    <div class="col-sm-8">
+                        <span class="badge {% if project.project_status == 'active' %}bg-success{% else %}bg-info{% endif %}">
+                            {{ project.project_status|capfirst }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Expected Hours:</div>
+                    <div class="col-sm-8">{{ project.expected_work_hours }} hrs</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-people me-2"></i>Assigned Employees</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for employee in project.assigned_employees.all %}
+                    <li class="list-group-item d-flex align-items-center">
+                        <div class="bg-light rounded-circle p-2 me-3">
+                            <i class="bi bi-person text-secondary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold">{{ employee.first_name }} {{ employee.last_name }}</div>
+                            <small class="text-muted">{{ employee.position }}</small>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted">No employees assigned to this project yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

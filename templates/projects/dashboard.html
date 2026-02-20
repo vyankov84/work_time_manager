@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-dark">System Overview</h2>
+        <hr>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-primary text-white p-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-briefcase fs-1 me-3"></i>
+                <div>
+                    <h4 class="mb-0">{{ total_projects }}</h4>
+                    <small>Total Projects</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-success text-white p-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-people fs-1 me-3"></i>
+                <div>
+                    <h4 class="mb-0">{{ total_employees }}</h4>
+                    <small>Employees</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0 fw-bold">Project Workload (Hours)</h5>
+            </div>
+            <div class="card-body">
+                {% for project in projects_with_hours %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="small fw-bold">{{ project.name }}</span>
+                        <span class="small text-muted">{{ project.total_hours }} hrs</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ project.total_hours }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0 fw-bold">Recent Activities</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for act in recent_activities %}
+                    <li class="list-group-item py-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 fw-bold text-primary">{{ act.employee.first_name }} {{ act.employee.last_name }}</h6>
+                            <small class="text-muted">{{ act.date|date:"d M" }}</small>
+                        </div>
+                        <p class="mb-1 small">{{ act.description|truncatechars:50 }}</p>
+                        <small class="text-muted italic"><i class="bi bi-clock me-1"></i>{{ act.hours_worked }} hours on {{ act.project.name }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-center py-4 text-muted italic">No recent logs found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

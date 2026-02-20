@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Projects</h2>
+        <p class="text-muted mb-0">Manage and track all company projects</p>
+    </div>
+    <a href="{% url 'projects:project-create' %}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-lg"></i> New Project
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Job Number</th>
+                        <th>Project Name</th>
+                        <th>Client</th>
+                        <th>Region</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                    <tr>
+                        <td class="ps-4 fw-bold text-primary">{{ project.job_number }}</td>
+                        <td>{{ project.name }}</td>
+                        <td>{{ project.client_name }}</td>
+                        <td><span class="badge rounded-pill bg-secondary">{{ project.get_region_display }}</span></td>
+                        <td>
+                            {% if project.project_status == 'active' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
+                            {% elif project.project_status == 'completed' %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle">{{ project.project_status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="btn-group shadow-sm">
+                                <a href="{% url 'projects:project-detail' project.pk %}" class="btn btn-sm btn-outline-secondary" title="View">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'projects:project-update' project.pk %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'projects:project-delete' project.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="bi bi-folder2-open display-4 text-muted d-block mb-3"></i>
+                            <p class="text-muted">No projects found. Start by creating one!</p>
+                            <a href="{% url 'projects:project-create' %}" class="btn btn-primary btn-sm">Create Project</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
