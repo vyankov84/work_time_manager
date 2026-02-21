@@ -53,6 +53,11 @@ class ProjectForm(forms.ModelForm):
                 "Prefixes: 111 (EMEA), 222 (APAC), 333 (NA), 444 (LATAM)"
             )
 
+    def clean_job_number(self):
+        if self.instance and self.instance.pk:
+            return self.instance.job_number
+        return self.cleaned_data.get('job_number')
+
     def clean_name(self):
         name = self.cleaned_data.get('name')
         if name and len(name) < 5:
