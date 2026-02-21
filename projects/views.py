@@ -37,14 +37,18 @@ def project_list(request: HttpRequest) -> HttpResponse:
 
     projects = Project.objects.all().order_by('-id')
 
-    return render(request, 'projects/project-list.html', {'projects': projects})
+    context = {'projects': projects}
+
+    return render(request, 'projects/project-list.html', context)
 
 
 def project_details(request: HttpRequest, pk: int) -> HttpResponse:
 
     project = get_object_or_404(Project, pk=pk)
 
-    return render(request, 'projects/project-details.html', {'project': project})
+    context = {'project': project}
+
+    return render(request, 'projects/project-details.html', context)
 
 
 def project_create(request: HttpRequest) -> HttpResponse:
@@ -58,7 +62,12 @@ def project_create(request: HttpRequest) -> HttpResponse:
     else:
         form = ProjectForm()
 
-    return render(request, 'projects/project-form.html', {'form': form, 'title': 'Create Project'})
+    context = {
+        'form': form,
+        'title': 'Create Project'
+    }
+
+    return render(request, 'projects/project-form.html', context)
 
 
 def project_update(request: HttpRequest, pk: int) -> HttpResponse:
@@ -73,7 +82,12 @@ def project_update(request: HttpRequest, pk: int) -> HttpResponse:
     else:
         form = ProjectForm(instance=project)
 
-    return render(request, 'projects/project-form.html', {'form': form, 'title': 'Update Project'})
+    context = {
+        'form': form,
+        'title': 'Update Project'
+    }
+
+    return render(request, 'projects/project-form.html', context)
 
 
 def project_delete(request: HttpRequest, pk: int) -> HttpResponse:
@@ -84,5 +98,7 @@ def project_delete(request: HttpRequest, pk: int) -> HttpResponse:
         project.delete()
         return redirect('projects:project-list')
 
-    return render(request, 'projects/project-confirm-delete.html', {'project': project})
+    context = {'project': project}
+
+    return render(request, 'projects/project-confirm-delete.html', context)
 

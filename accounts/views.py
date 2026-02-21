@@ -6,16 +6,20 @@ from .forms import EmployeeForm
 
 def employee_list(request: HttpRequest) -> HttpResponse:
 
-    employees = Employee.objects.all().order_by('first_name')
+    employees = Employee.objects.all().order_by('first_name','last_name')
 
-    return render(request, 'accounts/employee-list.html', {'employees': employees})
+    context = {'employees': employees}
+
+    return render(request, 'accounts/employee-list.html', context)
 
 
 def employee_details(request: HttpRequest, pk: int) -> HttpResponse:
 
     employee = get_object_or_404(Employee, pk=pk)
 
-    return render(request, 'accounts/employee-details.html', {'employee': employee})
+    context = {'employee': employee}
+
+    return render(request, 'accounts/employee-details.html', context)
 
 
 def employee_create(request: HttpRequest) -> HttpResponse:
@@ -35,6 +39,7 @@ def employee_create(request: HttpRequest) -> HttpResponse:
 
 
 def employee_update(request: HttpRequest, pk: int) -> HttpResponse:
+
     employee = get_object_or_404(Employee, pk=pk)
 
     if request.method == 'POST':
@@ -53,3 +58,16 @@ def employee_update(request: HttpRequest, pk: int) -> HttpResponse:
     }
 
     return render(request, 'accounts/employee-form.html', context)
+
+def employee_delete(request: HttpRequest, pk: int) -> HttpResponse:
+
+    employee = get_object_or_404(Employee, pk=pk)
+
+    if request.method == 'POST':
+        employee.delete()
+        return redirect('accounts:employee-list')
+
+    context = {'employee': employee}
+
+    return render(request, 'accounts/employee-confirm-delete.html', context)
+
