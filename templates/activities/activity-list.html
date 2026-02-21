@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Work Logs</h2>
+        <p class="text-muted mb-0">Tracked hours by employees across projects</p>
+    </div>
+    <a href="{% url 'activities:activity-create' %}" class="btn btn-dark shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Log Hours
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Date</th>
+                        <th>Employee</th>
+                        <th>Project</th>
+                        <th>Hours</th>
+                        <th>Task / Description</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for act in activities %}
+                    <tr>
+                        <td class="ps-4 text-dark fw-medium">
+                            {{ act.date|date:"d M Y" }}
+                        </td>
+                        <td>
+                            <div class="fw-bold text-primary">
+                                {{ act.employee.first_name }} {{ act.employee.last_name }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-info text-dark">{{ act.project.name }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold">
+                                {{ act.hours_worked }}h
+                            </span>
+                        </td>
+                        <td class="text-muted small">
+                            <span class="fw-medium text-dark">{{ act.task_name }}</span>
+                            {% if act.description %}
+                                <br><span class="opacity-75">{{ act.description}}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="btn-group">
+                                <a href="{% url 'activities:activity-update' act.pk %}" class="btn btn-sm btn-outline-secondary" title="Edit Log">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'activities:activity-delete' act.pk %}" class="btn btn-sm btn-outline-danger" title="Delete Log">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-clipboard-x fs-1 d-block mb-2"></i>
+                            No activities logged yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
